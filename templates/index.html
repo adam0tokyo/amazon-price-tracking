@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <link rel="stylesheet" href="style.css" />
+        <title>Simple Price Tracker</title>
+    </head>
+    <body>
+        <div class="container">
+            <h1>
+                <span class="line">simple amazon</span>
+                <span class="line">price tracker</span>
+            </h1>
+            <!-- {% if message %}
+            <p class="message">{{ message | safe }}</p>
+            {% endif %} -->
+            <form action="/submit" method="POST">
+                <div class="form-group">
+                    <h3>Product URL</h3>
+                    <input
+                        type="text"
+                        name="product-url"
+                        placeholder="https://www.amazon.co.jp/product-URL"
+                    />
+                </div>
+                <div class="form-group">
+                    <h3>Target Price</h3>
+                    <input
+                        type="text"
+                        name="target-price"
+                        placeholder="50,000"
+                    />
+                </div>
+                <div class="form-group">
+                    <h3>Email</h3>
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="my_email@address.com"
+                    />
+                </div>
+                <input type="submit" value="Submit" class="btn" />
+                </div>
+            </form>
+        </div>
+    </body>
+</html>
