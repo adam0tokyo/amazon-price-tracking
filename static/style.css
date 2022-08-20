@@ -37,6 +37,7 @@ h3 {
 }
 
 .message {
+    color: rgb(228, 41, 41);
     text-align: center;
     padding: 5px;
     border: #ccc dotted 2px;
