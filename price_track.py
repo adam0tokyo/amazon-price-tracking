@@ -7,7 +7,8 @@ from dotenv import load_dotenv, find_dotenv
 
 from datetime import datetime
 
-# from send_mail import send_mail
+from send_mail import send_mail
+
 # import random
 import psycopg2
 import psycopg2.extras
@@ -45,7 +46,7 @@ def scrape_site(target_url):
             print("something went wrong")
             return None
         # logic for emails?
-        return [re.sub("[^0-9.]|\.(?=.*\.)", "", price), title]
+        return [re.sub("[^0-9.]|\.(?=.*\.)", "", price), title.strip()]
     except Exception as error:
         print(error)
 
@@ -55,26 +56,31 @@ try:
         #     dbname={my_db_name}, user={my_db_user}, password={my_db_pass}, host={my_db_host}
         # )
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cur:
+            # cursor = conn.cursor(cursor_factory = psycopg2.extras.RealDictCursor)
             # Open a cursor to perform database operations
             cur = conn.cursor()
 
             # Execute a query
-            cur.execute("SELECT * FROM Scrapes WHERE active_search = false")
+            cur.execute("SELECT * FROM Scrapes WHERE active_search = true")
             records = cur.fetchall()
-
+            # print(records)
             for record in records:
-                newPrice = scrape_site(record[3])
+                print(record)
+
+                newPrice = scrape_site(record[10])
                 if newPrice:
-                    # print(newPrice)
+                    print(newPrice)
+                    #     print(record[2], type(record[2]))
                     cur.execute(
                         sql.SQL(
-                            "UPDATE Scrapes SET initial_price = %s, lowest_date = %s WHERE id=%s"
+                            "UPDATE Scrapes SET initial_price = %s, product_name = %s,lowest_date = %s WHERE id=%s"
                         ).format(sql.Identifier("Scrapes")),
-                        [newPrice[0], datetime.utcnow(), record[0]],
+                        [newPrice[0], newPrice[1], datetime.utcnow(), record[0]],
                     )
-                    # TODO handle edge cases, other variables, update based on output, test in amazon us
-                    # TODO link in send mails
-                    # TODO setup basic email, DEPLOY!! <~~tomorrow goal
+                    send_mail(record[10], record[2], record[1], record[3])
+                # TODO handle edge cases, other variables, update based on output, test in amazon us
+                # TODO link in send mails
+                # TODO setup basic email, DEPLOY!! <~~tomorrow goal
                 # print(type(record[3]), record[3])
 
             # update_script = 'UPDATE employee SET salary = salary + (salary * 0.5)'

@@ -7,24 +7,24 @@ from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
 
-def send_mail(productURL, targetPrice, userEmail):
-    port = os.getenv("MALPORT")
-    smtp_server = os.getenv("SMTPSERVER")
-    login = os.getenv("MAILUSERNAME")
-    password = os.getenv("MAILPASSWORD")
-    message = f"<h3>Test EMAIL</h3><ul><li>Product URL: {productURL}</li><li>Desired Price: {targetPrice}</li><li>user Email: {targetPrice}</li></ul>"
+# def send_mail_old(productURL, targetPrice, userEmail, currentPrice):
+#     port = os.getenv("MALPORT")
+#     smtp_server = os.getenv("SMTPSERVER")
+#     login = os.getenv("MAILUSERNAME")
+#     password = os.getenv("MAILPASSWORD")
+#     message = f"<h3>Test EMAIL</h3><ul><li>Product URL: {productURL}</li><li>Desired Price: {targetPrice}</li><li>user Email: {userEmail}</li><li>Current Price: {currentPrice}</li></ul>"
 
-    sender_email = "~"
-    receiver_email = "~"
-    msg = MIMEText(message, "html")
-    msg["Subject"] = "Confrim Test"
-    msg["From"] = sender_email
-    msg["To"] = receiver_email
+#     sender_email = "simplepricetracking@gmail.com"
+#     receiver_email = "{userEmail}"
+#     msg = MIMEText(message, "html")
+#     msg["Subject"] = "Confrim Test"
+#     msg["From"] = "simplepricetracking@gmail.com"
+#     msg["To"] = userEmail
 
-    # Send email
-    with smtplib.SMTP(smtp_server, port) as server:
-        server.login(login, password)
-        server.sendmail(sender_email, receiver_email, msg.as_string())
+#     # Send email
+#     with smtplib.SMTP(smtp_server, port) as server:
+#         server.login(login, password)
+#         server.sendmail(sender_email, receiver_email, msg.as_string())
 
 
 ##ALTERNATE USING GOOGLE
@@ -33,16 +33,22 @@ def send_mail(productURL, targetPrice, userEmail):
 EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 
-# with smtplib.SMTP("smtp.gmail.com", 587) as smtp:
-#     smtp.ehlo()
-#     smtp.starttls()
-#     smtp.ehlo()
 
-#     smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+def send_mail(productURL, targetPrice, userEmail, currentPrice):
+    with smtplib.SMTP("smtp.gmail.com", 587) as smtp:
+        smtp.ehlo()
+        smtp.starttls()
+        smtp.ehlo()
 
-#     subject = "Testing 4..5..6.."
-#     body = f"<h3>Test EMAIL</h3>"
+        smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
 
-#     msg = f"Subject: {subject}\n\n{body}"
+        subject = "Testing 4..5..6.."
+        body = f"<h3>Test EMAIL</h3><ul><li>Product URL: {productURL}</li><li>Desired Price: {targetPrice}</li><li>user Email: {userEmail}</li><li>Current Price: {currentPrice}</li></ul>"
 
-#     smtp.sendmail(EMAIL_ADDRESS, "adam0carson@gmail.com", msg)
+        msg = f"Subject: {subject}\n\n{body}"
+
+        smtp.sendmail(EMAIL_ADDRESS, userEmail, msg)
+
+
+# send_mail()
+# send_mail("FAKEURL", "TARGET PRICE 5", "adam0carson@gmail.com", "currentPrice 500")
