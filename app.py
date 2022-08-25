@@ -74,8 +74,8 @@ def submit():
         data = Scrapes(userEmail, targetPrice, productURL)
         db.session.add(data)
         db.session.commit()
-        send_mail(productURL, targetPrice, userEmail)
-        return render_template("received.html")
+        # send_mail(productURL, targetPrice, userEmail)
+        return render_template("/received.html")
 
 
 # @app.route("/track")
@@ -83,9 +83,9 @@ def submit():
 #     all_scrapes = db.session.query.all()
 #     print(all_scrapes)
 # return render_template("index.html")
-@app.route("/track")
-def show_all():
-    return render_template("show_all.html", list=Scrapes.query.all())
+# @app.route("/track")
+# def show_all():
+#     return render_template("show_all.html", list=Scrapes.query.all())
 
 
 db = SQLAlchemy(app)
