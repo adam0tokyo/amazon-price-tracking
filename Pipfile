@@ -10,6 +10,9 @@ psycopg2-binary = "*"
 flask-sqlalchemy = "*"
 gunicorn = "*"
 python-dotenv = "*"
+beautifulsoup4 = "*"
+requests = "*"
+lxml = "*"
 
 [dev-packages]
 

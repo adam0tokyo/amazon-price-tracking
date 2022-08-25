@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head></head>
+    <body>
+        <!-- <h3>
+         <a href = "{{ url_for('show_all') }}">Comments - Flask 
+            SQLAlchemy example</a>
+      </h3> -->
+
+        <hr />
+        <!-- {%- for message in get_flashed_messages() %}
+         {{ message }}
+      {%- endfor %} -->
+
+        <!-- <h3>Students (<a href = "{{ url_for('new') }}">Add Student
+         </a>)</h3> -->
+
+        <table>
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>user_email</th>
+                    <th>target_price</th>
+                    <th>initial_price</th>
+                    <th>lowest_price</th>
+                    <th>lowest_date</th>
+                    <th>added_date</th>
+                    <th>email_confirmed</th>
+                    <th>active_search</th>
+                    <th>prodict_url</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <td>{{ list.id }}</td>
+                    <td>{{ list.user_email }}</td>
+                    <td>{{ list.target_price }}</td>
+                    <td>{{ list.initial_price }}</td>
+                    <td>{{ list.lowest_price }}</td>
+                    <td>{{ list.lowest_date }}</td>
+                    <td>{{ list.added_date }}</td>
+                    <td>{{ list.email_confirmed }}</td>
+                    <td>{{ list.active_search }}</td>
+                    <td>{{ list.product_url }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+</html>
