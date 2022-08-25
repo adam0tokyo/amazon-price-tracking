@@ -51,4 +51,4 @@ def send_mail(productURL, targetPrice, userEmail, currentPrice):
 
 
 # send_mail()
-# send_mail("FAKEURL", "TARGET PRICE 5", "adam0carson@gmail.com", "currentPrice 500")
+# send_mail("FAKEURL", "TARGET PRICE 5", "test@MAIL.com", "currentPrice 500")
