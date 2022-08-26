@@ -3,6 +3,8 @@ from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from send_mail import *
 from datetime import datetime
+
+# from markupsafe import escape
 import re
 import os
 
@@ -55,18 +57,26 @@ def submit():
         return render_template("/received.html")
 
 
-@app.route("/confirm")
-def confirm():
-    # TODO set up confirmation page to switch active search/email confirmation on
-    # figure out routing solution
-    return render_template("/confirm.html")
+# @app.route("/confirm/<int:post_id>")
+# def confirm(id):
+#     # TODO set up confirmation page to switch active search/email confirmation on
+#     # figure out routing solution
+#     # TODO DB SESSION REQUEST DATA
+#     # make endpoint to cancel
+#     return render_template("/confirm.html")
+
+# EXAMPLE ROUTE
+#     @app.route('/post/<int:post_id>')
+# def show_post(post_id):
+#     # show the post with the given id, the id is an integer
+#     return f'Post {post_id}'
 
 
-@app.route("/cancel")
-def cancel():
-    # TODO set up confirmation page to switch active search/email confirmation on
-    # figure out routing solution
-    return render_template("/cancel.html")
+# @app.route("/cancel")
+# def cancel():
+#     # TODO set up confirmation page to switch active search/email confirmation on
+#     # figure out routing solution
+#     return render_template("/cancel.html")
 
 
 db = SQLAlchemy(app)

@@ -27,6 +27,8 @@ load_dotenv(find_dotenv())
 my_db = os.getenv("DBURI")
 # my_db_port = os.getenv("MAILUSERNAME")
 
+# TODO CLEAN LOGIC AND CODE HERE, FIX EMAILS
+
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:103.0) Gecko/20100101 Firefox/103.0"
