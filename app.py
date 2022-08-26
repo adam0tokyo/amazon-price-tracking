@@ -1,21 +1,11 @@
-# from email import message
+from dotenv import load_dotenv, find_dotenv
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
+from send_mail import *
+from datetime import datetime
 import re
 import os
-from dotenv import load_dotenv, find_dotenv
-from datetime import datetime
-from send_mail import send_mail
 
-# import random
-
-# from sqlalchemy import select
-# from sqlalchemy.orm import Session
-
-# session = Session(engine, future=True)
-
-
-#  FFFFFFF
 load_dotenv(find_dotenv())
 
 app = Flask(__name__)
@@ -26,20 +16,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 @app.route("/")
 def index():
-    # all_scrapes = db.Query.all()
-    # print("TESTER", all_scrapes)
-
-    # session.query(Scrapes)
-    # for scrape in Scrapes:
-    # print(scrape.user_email)
-    # all_scrapes = Scrapes.query.all()
-    # filtered_scrapes = Scrapes.query.filter_by(id="3").first()
-    # # for item in filtered_scrapes:
-    # #     print(item)
-    # # print(all_scrapes, filtered_scrapes.id, filtered_scrapes.user_email)
-    # for scrape in all_scrapes:
-    #     print(scrape.id, scrape.user_email)
-    return render_template("index.html")
+    return render_template("/index.html")
 
 
 @app.route("/submit", methods=["POST"])
@@ -70,22 +47,26 @@ def submit():
                 prevUserEmail=userEmail,
             )
         print(productURL, targetPrice, userEmail)
-        # TODO add filter conditional for same email/prodcut/tPrice ?
         data = Scrapes(userEmail, targetPrice, productURL)
         db.session.add(data)
         db.session.commit()
-        # send_mail(productURL, targetPrice, userEmail)
+        ## TODO SEND CONFIRMATION EMAIL /W CANCEL LINK, product url, target price
+        # send_confirmation_mail(productURL, targetPrice, userEmail)
         return render_template("/received.html")
 
 
-# @app.route("/track")
-# def track():
-#     all_scrapes = db.session.query.all()
-#     print(all_scrapes)
-# return render_template("index.html")
-# @app.route("/track")
-# def show_all():
-#     return render_template("show_all.html", list=Scrapes.query.all())
+@app.route("/confirm")
+def confirm():
+    # TODO set up confirmation page to switch active search/email confirmation on
+    # figure out routing solution
+    return render_template("/confirm.html")
+
+
+@app.route("/cancel")
+def cancel():
+    # TODO set up confirmation page to switch active search/email confirmation on
+    # figure out routing solution
+    return render_template("/cancel.html")
 
 
 db = SQLAlchemy(app)
