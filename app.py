@@ -5,8 +5,6 @@ from sqlalchemy.dialects.postgresql import UUID
 from send_mail import *
 from datetime import datetime
 import uuid
-
-# from markupsafe import escape
 import re
 import os
 

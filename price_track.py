@@ -1,34 +1,17 @@
-# from email import message
-# from flask import Flask, render_template, request
-# from flask_sqlalchemy import SQLAlchemy
-import re
-import os
 from dotenv import load_dotenv, find_dotenv
-
+import os
+import re
+from send_mail import *
 from datetime import datetime
-
-from send_mail import send_mail
-
-# import random
+import time
 import psycopg2
 import psycopg2.extras
 from psycopg2 import sql
-
 from bs4 import BeautifulSoup
 import requests
-import time
 
 load_dotenv(find_dotenv())
-
-# my_db_name = os.getenv("MY_DB_NAME")
-# my_db_user = os.getenv("MY_DB_USER")
-# my_db_pass = os.getenv("MY_DB_PASS")
-# my_db_host = os.getenv("MY_DB_HOST")
 my_db = os.getenv("DBURI")
-# my_db_port = os.getenv("MAILUSERNAME")
-
-# TODO CLEAN LOGIC AND CODE HERE, FIX EMAILS
-
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:103.0) Gecko/20100101 Firefox/103.0"
@@ -36,6 +19,7 @@ HEADERS = {
 
 
 def scrape_site(target_url):
+    # TODO clean up logic, account for US amazon, other price locations
     try:
         page = requests.get(target_url, headers=HEADERS)
         soup = BeautifulSoup(page.content, "lxml")
@@ -43,11 +27,10 @@ def scrape_site(target_url):
         price = soup.find(class_="a-offscreen").text
         print(title)
         print(price)
-        time.sleep(1)
+        time.sleep(1)  # TODO sleep for ~2-3 seconds in production
         if title is None or price is None:
-            print("something went wrong")
+            # TODO logic here for failed price, send the email
             return None
-        # logic for emails?
         return [re.sub("[^0-9.]|\.(?=.*\.)", "", price), title.strip()]
     except Exception as error:
         print(error)
@@ -55,41 +38,27 @@ def scrape_site(target_url):
 
 try:
     with psycopg2.connect(my_db) as conn:
-        #     dbname={my_db_name}, user={my_db_user}, password={my_db_pass}, host={my_db_host}
-        # )
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cur:
             # cursor = conn.cursor(cursor_factory = psycopg2.extras.RealDictCursor)
             # Open a cursor to perform database operations
             cur = conn.cursor()
 
-            # Execute a query
             cur.execute("SELECT * FROM Scrapes WHERE active_search = true")
             records = cur.fetchall()
-            # print(records)
             for record in records:
-                print(record)
+                # print(record)
 
-                newPrice = scrape_site(record[10])
+                newPrice = scrape_site(record[11])
                 if newPrice:
+                    # TODO logic for below target price, or not
                     print(newPrice)
-                    #     print(record[2], type(record[2]))
                     cur.execute(
                         sql.SQL(
                             "UPDATE Scrapes SET initial_price = %s, product_name = %s,lowest_date = %s WHERE id=%s"
                         ).format(sql.Identifier("Scrapes")),
                         [newPrice[0], newPrice[1], datetime.utcnow(), record[0]],
                     )
-                    send_mail(record[10], record[2], record[1], record[3])
-                # TODO handle edge cases, other variables, update based on output, test in amazon us
-                # TODO link in send mails
-                # TODO setup basic email, DEPLOY!! <~~tomorrow goal
-                # print(type(record[3]), record[3])
-
-            # update_script = 'UPDATE employee SET salary = salary + (salary * 0.5)'
-            #         cur.execute(update_script)
-
-            # Retrieve query results
-            # print(records)
+                    send_mail(record[11], record[3], record[2], newPrice[0])
 
 except Exception as error:
     print(error)
