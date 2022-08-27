@@ -5,34 +5,22 @@ from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
 
-# def send_mail_old(productURL, targetPrice, userEmail, currentPrice):
-#     port = os.getenv("MALPORT")
-#     smtp_server = os.getenv("SMTPSERVER")
-#     login = os.getenv("MAILUSERNAME")
-#     password = os.getenv("MAILPASSWORD")
-#     message = f"<h3>Test EMAIL</h3><ul><li>Product URL: {productURL}</li><li>Desired Price: {targetPrice}</li><li>user Email: {userEmail}</li><li>Current Price: {currentPrice}</li></ul>"
-
-#     sender_email = "simplepricetracking@gmail.com"
-#     receiver_email = "{userEmail}"
-#     msg = MIMEText(message, "html")
-#     msg["Subject"] = "Confrim Test"
-#     msg["From"] = "simplepricetracking@gmail.com"
-#     msg["To"] = userEmail
-
-#     # Send email
-#     with smtplib.SMTP(smtp_server, port) as server:
-#         server.login(login, password)
-#         server.sendmail(sender_email, receiver_email, msg.as_string())
-
-##ALTERNATE USING GOOGLE
-
 SMTP_SERVER = os.getenv("SMTP_SERVER")
 SMTP_PORT = os.getenv("SMTP_PORT")
 EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 
 
-def send_mail(productURL, targetPrice, userEmail, currentPrice):
+def send_mail_found(
+    productURL,
+    targetPrice,
+    userEmail,
+    productName,
+    initialPrice,
+    currentPrice,
+    startDate,
+    endDate,
+):
     with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as smtp:
         smtp.ehlo()
         smtp.starttls()
@@ -40,23 +28,28 @@ def send_mail(productURL, targetPrice, userEmail, currentPrice):
 
         smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
 
-        subject = "Testing 4..5..6.."
-        body = f"<h3>Test EMAIL</h3><ul><li>Product URL: {productURL}</li><li>Desired Price: {targetPrice}</li><li>user Email: {userEmail}</li><li>Current Price: {currentPrice}</li></ul>"
-
-        msg = f"Subject: {subject}\n\n{body}"
-        print(
-            "sending mail from, to, targetPrice, current price..",
-            EMAIL_ADDRESS,
-            userEmail,
-            targetPrice,
-            currentPrice,
-        )
-        smtp.sendmail(EMAIL_ADDRESS, userEmail, msg)
+        message = f"<h3>Great News! Your product is at or below your desired price!</h3><ul><li>Product URL: {productURL}</li><li>Product Name: {productName}</li><li>Starting Price: {initialPrice}</li><li>Desired Price: {targetPrice}</li><li>Current Price: {currentPrice}</li><li>Tracking Start: {startDate}</li><li>Tracking End: {endDate}</li></ul><p>We have stopped tracking this product. Please reply to this email if you have any questions, comments, or concerns.</p>"
+        msg = MIMEText(message, "html")
+        msg["Subject"] = "Product Tracking Success!"
+        msg["From"] = EMAIL_ADDRESS
+        msg["To"] = userEmail
+        smtp.sendmail(EMAIL_ADDRESS, userEmail, msg.as_string())
 
 
-# send_mail_problem
-# send_mail_confirm
-# send_mail_found
+def send_mail_problem(userEmail, productURL, targetPrice):
+    with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as smtp:
+        smtp.ehlo()
+        smtp.starttls()
+        smtp.ehlo()
 
-# send_mail()
-# send_mail("FAKEURL", "TARGET PRICE 5", "test@MAIL.com", "currentPrice 500")
+        smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+
+        message = f"<h3>Sorry, there was an error tracking your product</h3><ul><li>Product URL: {productURL}</li><li>Desired Price: {targetPrice}</li></ul><p>We have stopped tracking this product. Please reply to this email if you have any questions, comments, or concerns.</p>"
+        msg = MIMEText(message, "html")
+        msg["Subject"] = "Product Tracking Error"
+        msg["From"] = EMAIL_ADDRESS
+        msg["To"] = userEmail
+        smtp.sendmail(EMAIL_ADDRESS, userEmail, msg.as_string())
+
+
+# TODO send_mail_confirm
