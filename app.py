@@ -1,8 +1,10 @@
 from dotenv import load_dotenv, find_dotenv
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.dialects.postgresql import UUID
 from send_mail import *
 from datetime import datetime
+import uuid
 
 # from markupsafe import escape
 import re
@@ -85,11 +87,12 @@ db = SQLAlchemy(app)
 class Scrapes(db.Model):
     __tablename__ = "scrapes"
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(UUID(as_uuid=True), default=uuid.uuid4)
     user_email = db.Column(db.String(1000), nullable=False)
-    target_price = db.Column(db.Numeric(scale=2), nullable=False)
-    initial_price = db.Column(db.Numeric(scale=2))
+    target_price = db.Column(db.Float, nullable=False)
+    initial_price = db.Column(db.Float)
+    lowest_price = db.Column(db.Float)
     added_date = db.Column(db.DateTime, default=datetime.utcnow)
-    lowest_price = db.Column(db.Numeric(scale=2))
     lowest_date = db.Column(db.DateTime, default=datetime.utcnow)
     email_confirmed = db.Column(db.Boolean, default=False)
     active_search = db.Column(db.Boolean, default=True)
