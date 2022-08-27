@@ -19,15 +19,13 @@ HEADERS = {
 
 
 def scrape_site(target_url):
-    # TODO clean up logic, account for US amazon, other price locations
+    # TODO clean up logic, account for US amazon, other price locations on page
     try:
         page = requests.get(target_url, headers=HEADERS)
         soup = BeautifulSoup(page.content, "lxml")
         title = soup.find(id="productTitle").text
         price = soup.find(class_="a-offscreen").text
-        print(title)
-        print(price)
-        time.sleep(1)  # TODO sleep for ~2-3 seconds in production
+        time.sleep(3)
         if title is None or price is None:
             return None
         return [float(re.sub("[^0-9.]|\.(?=.*\.)", "", price)), title.strip()]
@@ -35,35 +33,6 @@ def scrape_site(target_url):
         print("Scrape Site function error", error)
 
 
-def first_time(id, newPrice, newName):
-    try:
-        with psycopg2.connect(my_db) as conn:
-            with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cur:
-                cur = conn.cursor()
-                cur.execute(f"SELECT * FROM Scrapes WHERE id={id}")
-                new_entry = cur.fetchall()
-                print(new_entry)
-                print("adding first entiries")
-                cur.execute(
-                    sql.SQL(
-                        "UPDATE Scrapes SET initial_price = %s, lowest_price = %s, product_name = %s, lowest_date = %s WHERE id=%s"
-                    ).format(sql.Identifier("Scrapes")),
-                    [
-                        newPrice,
-                        newPrice,
-                        newName,
-                        datetime.utcnow(),
-                        id,
-                    ],
-                )
-    except Exception as error:
-        print(error)
-    finally:
-        if conn is not None:
-            conn.close()
-
-
-# look through all records that are marked for active search
 try:
     with psycopg2.connect(my_db) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cur:
@@ -84,11 +53,20 @@ try:
                         ],
                     )
                 elif newPrice is not None:
-                    if record[4] is None:  # set intial scan values
-                        first_time(record[0], newPrice[0], newPrice[1])
-                    if (
-                        record[4] is None or newPrice[0] < record[5]
-                    ):  # if lower than current lowest
+                    if record[4] is None:
+                        cur.execute(
+                            sql.SQL(
+                                "UPDATE Scrapes SET initial_price = %s, lowest_price = %s, product_name = %s, lowest_date = %s WHERE id=%s"
+                            ).format(sql.Identifier("Scrapes")),
+                            [
+                                newPrice[0],
+                                newPrice[0],
+                                newPrice[1],
+                                datetime.utcnow(),
+                                record[0],
+                            ],
+                        )
+                    if record[4] is None or newPrice[0] < record[5]:
                         cur.execute(
                             sql.SQL(
                                 "UPDATE Scrapes SET lowest_price = %s, lowest_date = %s WHERE id=%s"
@@ -99,9 +77,7 @@ try:
                                 record[0],
                             ],
                         )
-                    if newPrice[0] < record[3]:  # if lower than target
-                        # print("it's a hit! sending email")
-                        # print(newPrice[0], "is lower than", record[3])
+                    if newPrice[0] < record[3]:
                         cur.execute(
                             sql.SQL(
                                 "UPDATE Scrapes SET active_search = %s WHERE id=%s"
