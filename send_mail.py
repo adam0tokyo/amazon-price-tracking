@@ -9,6 +9,7 @@ SMTP_SERVER = os.getenv("SMTP_SERVER")
 SMTP_PORT = os.getenv("SMTP_PORT")
 EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
+ROOT_URL = os.getenv("ROOT_URL")
 
 
 def send_mail_found(
@@ -52,4 +53,28 @@ def send_mail_problem(userEmail, productURL, targetPrice):
         smtp.sendmail(EMAIL_ADDRESS, userEmail, msg.as_string())
 
 
-# TODO send_mail_confirm
+# TODO clean up email formatting
+def send_mail_confirm(productURL, targetPrice, userEmail, uUserID):
+    with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as smtp:
+        smtp.ehlo()
+        smtp.starttls()
+        smtp.ehlo()
+
+        smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+
+        message = f"""
+            <h2>Want us to let you know when this product is at your desired price?</h2>
+            <ul>
+                <li>Product URL: {productURL}</li>
+                <li>Desired Price: {targetPrice}</li>
+            </ul>
+            <p>Simply click the link below and we'll check the price daily. Once it is at or below your desired price, we'll send you another email.</p>
+            <h3> <a href="{ROOT_URL}confirm/{uUserID}">Click here to confirm</a></h3>
+            <p>If at any time you want to stop tracking this product click the link below.</p>
+            <h3> <a href="{ROOT_URL}cancel/{uUserID}">Click here to cancel</a></h3>
+            """
+        msg = MIMEText(message, "html")
+        msg["Subject"] = "Product Tracking Confirmation Required"
+        msg["From"] = EMAIL_ADDRESS
+        msg["To"] = userEmail
+        smtp.sendmail(EMAIL_ADDRESS, userEmail, msg.as_string())
