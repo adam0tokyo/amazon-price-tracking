@@ -11,7 +11,6 @@ A basic web app for users to check amazon.co.jp products. Users can add a produc
 - create a PostgreSQL database for the project
 - enable SMTP mail and get the information for your mail server
 - add variables to `.env` file
-- run `python`
 - in python, `from app import db` then `db.create_all()` to create the database
 - `python app.py` to start the web app
 - run `python price_track.py` to process the requests, or schedule it to run at an interval
