@@ -1,6 +1,6 @@
 # simple price tracking
 
-A basic web app for users to check [amazon.co.jp](http://amazon.co.jp) products. Users can add a product URL, desired price, and their email address. Upon email confirmation, the app will check the product price daily until it is at or below the user’s desired price. When the desired price is met, the app will send the user an email alerting about the price, along with some extra information.
+A basic web app for users to check amazon.co.jp products. Users can add a product URL, desired price, and their email address. Upon email confirmation, the app will check the product price daily until it is at or below the user’s desired price. When the desired price is met, the app will send the user an email alerting about the price, along with some extra information.
 
 # Local Deployment
 
@@ -16,7 +16,7 @@ A basic web app for users to check [amazon.co.jp](http://amazon.co.jp) products.
 
 ## .env variables
 
-```json
+```
 APPDEBUGSTATE= //True or False, depending on local or hosted deployment
 DBURI= //Postgres database URI
 SMTP_SERVER= //mail server name
@@ -28,7 +28,7 @@ ROOT_URL= //app deployment URL
 
 ## .env example
 
-```json
+```
 APPDEBUGSTATE=True
 DBURI=postgresql://postgres:mypass@localhost/simple-price-tracking
 SMTP_SERVER=smtp.gmail.com
