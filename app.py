@@ -55,13 +55,13 @@ def submit():
         userEmail = request.form["user-email"]
         uUserID = uuid.uuid4()
         if (
-            ("amazon.com" not in productURL)
-            and ("amazon.co.jp" not in productURL)
+            ("amazon.co.jp" not in productURL)
             and ("amazon.jp" not in productURL)
+            # ("amazon.com" not in productURL)
         ):
             return render_template(
                 "index.html",
-                message="Sorry, currently we only support amazon.com & amazon.co.jp",
+                message="Sorry, currently we only support amazon.co.jp",
                 prevProductURL=productURL,
                 prevTargetPrice=stageTargetPrice,
                 prevUserEmail=userEmail,
@@ -81,7 +81,6 @@ def submit():
         return render_template("/received.html")
 
 
-# TODO RENDER data of tracked object target URL, target price
 @app.route("/confirm/<target_user>")
 def confirm(target_user):
     print("test", uuid.uuid4())
