@@ -2,6 +2,8 @@
 
 A basic web app for users to check amazon.co.jp products. Users can add a product URL, desired price, and their email address. Upon email confirmation, the app will check the product price daily until it is at or below the user’s desired price. When the desired price is met, the app will send the user an email alerting about the price, along with some extra information.
 
+##[Try it out](https://simple-price-tracking.herokuapp.com/)
+
 # Local Deployment
 
 - clone the repo, `pipenv install` or `pip install` in your terminal
