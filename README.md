@@ -2,7 +2,7 @@
 
 A basic web app for users to check amazon.co.jp products. Users can add a product URL, desired price, and their email address. Upon email confirmation, the app will check the product price daily until it is at or below the user’s desired price. When the desired price is met, the app will send the user an email alert about the price, along with some extra information.
 
-## [Try it out](https://simple-price-tracking.herokuapp.com/)
+## [try it out!](https://simple-price-tracking.herokuapp.com/)
 
 # Local Deployment
 
@@ -15,7 +15,7 @@ A basic web app for users to check amazon.co.jp products. Users can add a produc
 - `python app.py` to start the web app
 - run `python price_track.py` to process the requests, or schedule it to run at an interval
 
-## .env variables
+### .env variables
 
 ```
 APPDEBUGSTATE= //True or False, depending on local or hosted deployment
@@ -27,7 +27,7 @@ EMAIL_PASSWORD= //mail server password
 ROOT_URL= //app deployment URL
 ```
 
-## .env example
+### .env example
 
 ```
 APPDEBUGSTATE=True
@@ -39,18 +39,19 @@ EMAIL_PASSWORD=abcd1234
 ROOT_URL=http://127.0.0.1:5000/
 ```
 
-# Features
+# Structure
 
-- Python
-- Flask
-- PostgreSQL
-- SQLAlchemy
-- psycopg2
-- Beautiful Soup4
-- requests
-- send_mail
+![structure](./img/structure.png)
 
-## Images
+- `Python` scripts
+- `PostgreSQL` database
+- `Flask` web framework
+- `SQLAlchemy` query builder for Flask
+- `psycopg2` database access for Python scripts
+- `Beautiful Soup4` web scraping
+- `smtplib` to send mail
+
+# Images
 
 ![index](./img/index.png)
 
