@@ -1,4 +1,4 @@
-# simple price tracking
+# Amazon Price Tracking
 
 A basic web app for users to check amazon.co.jp products. Users can add a product URL, desired price, and their email address. Upon email confirmation, the app will check the product price daily until it is at or below the user’s desired price. When the desired price is met, the app will send the user an email alert about the price, along with some extra information.
 
